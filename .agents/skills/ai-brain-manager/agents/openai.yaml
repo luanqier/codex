@@ -1,0 +1,6 @@
+interface:
+  display_name: "AI-Brain Manager"
+  short_description: "Route notes, decisions, skills, and automation."
+  default_prompt: "Use $ai-brain-manager to classify and save this conversation into my AI-Brain."
+policy:
+  allow_implicit_invocation: true

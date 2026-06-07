@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mux Video Audio</title>
+  </head>
+  <body>
+    <video id="video" src="../renders/pursuit-problem-courseware.webm" playsinline></video>
+    <audio id="audio" src="../assets/narration.wav"></audio>
+    <canvas id="canvas" width="1920" height="1080"></canvas>
+    <script>
+      function waitForMedia(element) {
+        return new Promise((resolve, reject) => {
+          if (element.readyState >= 2) {
+            resolve();
+            return;
+          }
+          element.addEventListener("loadeddata", resolve, { once: true });
+          element.addEventListener("error", () => reject(new Error("media load failed")), { once: true });
+        });
+      }
+
+      function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result.split(",")[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      }
+
+      window.renderMux = async function renderMux() {
+        const video = document.getElementById("video");
+        const audio = document.getElementById("audio");
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+
+        await Promise.all([waitForMedia(video), waitForMedia(audio)]);
+
+        const canvasStream = canvas.captureStream(25);
+        const audioStream = audio.captureStream();
+        for (const track of audioStream.getAudioTracks()) {
+          canvasStream.addTrack(track);
+        }
+
+        const chunks = [];
+        const recorder = new MediaRecorder(canvasStream, {
+          mimeType: "video/webm; codecs=vp8,opus",
+          videoBitsPerSecond: 2600000,
+          audioBitsPerSecond: 128000,
+        });
+
+        recorder.ondataavailable = (event) => {
+          if (event.data && event.data.size) {
+            chunks.push(event.data);
+          }
+        };
+
+        video.muted = true;
+        video.currentTime = 0;
+        audio.currentTime = 0;
+
+        const stopped = new Promise((resolve) => {
+          recorder.onstop = resolve;
+        });
+
+        function draw() {
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          if (!video.ended) {
+            requestAnimationFrame(draw);
+          }
+        }
+
+        recorder.start(1000);
+        draw();
+        await Promise.all([video.play(), audio.play()]);
+        await new Promise((resolve) => {
+          video.addEventListener("ended", resolve, { once: true });
+        });
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        recorder.stop();
+        await stopped;
+
+        return blobToBase64(new Blob(chunks, { type: "video/webm" }));
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="node_modules/gsap/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #f7faf7;
+        font-family: sans-serif;
+        color: #18324a;
+      }
+
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+        background:
+          linear-gradient(90deg, rgba(15, 118, 110, 0.06) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(15, 118, 110, 0.06) 1px, transparent 1px),
+          #f7faf7;
+        background-size: 48px 48px;
+      }
+
+      #course {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .corner-label {
+        position: absolute;
+        top: 44px;
+        left: 64px;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 26px;
+        font-weight: 700;
+        color: #0f766e;
+      }
+
+      .corner-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #c2410c;
+        box-shadow: 0 0 0 10px rgba(249, 115, 22, 0.14);
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+
+      #scene-1 {
+        opacity: 1;
+      }
+
+      .scene-content {
+        width: 100%;
+        height: 100%;
+        padding: 112px 120px 88px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 38px;
+      }
+
+      .center {
+        align-items: center;
+        text-align: center;
+      }
+
+      .eyebrow {
+        font-size: 30px;
+        font-weight: 800;
+        color: #0f766e;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        font-size: 112px;
+        line-height: 1.08;
+        font-weight: 900;
+        letter-spacing: 0;
+        max-width: 1420px;
+      }
+
+      h2 {
+        font-size: 72px;
+        line-height: 1.16;
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+
+      .subline {
+        font-size: 42px;
+        line-height: 1.4;
+        color: #546376;
+        font-weight: 650;
+        max-width: 1240px;
+      }
+
+      .track-wrap {
+        width: min(1420px, 100%);
+        padding: 50px 58px 42px;
+        border: 3px solid rgba(15, 118, 110, 0.18);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 18px 50px rgba(24, 50, 74, 0.10);
+      }
+
+      .track {
+        position: relative;
+        height: 190px;
+        border-bottom: 10px solid #18324a;
+      }
+
+      .track::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -33px;
+        height: 4px;
+        background: repeating-linear-gradient(90deg, #cbd5e1 0 42px, transparent 42px 82px);
+      }
+
+      .runner {
+        position: absolute;
+        bottom: 18px;
+        width: 130px;
+        height: 76px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-size: 32px;
+        font-weight: 900;
+        color: #fff;
+        box-shadow: 0 12px 22px rgba(24, 50, 74, 0.18);
+      }
+
+      .runner::before,
+      .runner::after {
+        content: "";
+        position: absolute;
+        bottom: -22px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #18324a;
+        border: 7px solid #eef2f7;
+      }
+
+      .runner::before {
+        left: 18px;
+      }
+
+      .runner::after {
+        right: 18px;
+      }
+
+      .slow {
+        left: 690px;
+        background: #0f766e;
+      }
+
+      .fast {
+        left: 90px;
+        background: #f97316;
+      }
+
+      .runner-label {
+        position: absolute;
+        top: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #18324a;
+        font-size: 24px;
+        white-space: nowrap;
+        font-weight: 800;
+      }
+
+      .gap-brace {
+        position: absolute;
+        left: 255px;
+        right: 690px;
+        top: 50px;
+        height: 58px;
+        border-top: 7px solid #2563eb;
+        transform-origin: left center;
+      }
+
+      .gap-brace::before,
+      .gap-brace::after {
+        content: "";
+        position: absolute;
+        top: -7px;
+        width: 7px;
+        height: 42px;
+        background: #2563eb;
+      }
+
+      .gap-brace::before {
+        left: 0;
+      }
+
+      .gap-brace::after {
+        right: 0;
+      }
+
+      .gap-text {
+        position: absolute;
+        top: -48px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #2563eb;
+        background: #ffffff;
+        padding: 6px 18px;
+        border-radius: 8px;
+        font-size: 28px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
+      .caption {
+        width: min(1320px, 100%);
+        align-self: center;
+        padding: 24px 34px;
+        border-left: 10px solid #0f766e;
+        background: #ffffff;
+        box-shadow: 0 14px 34px rgba(24, 50, 74, 0.09);
+        border-radius: 8px;
+        font-size: 36px;
+        line-height: 1.38;
+        color: #18324a;
+        font-weight: 700;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 46px;
+        align-items: center;
+      }
+
+      .panel {
+        background: #ffffff;
+        border: 3px solid rgba(37, 99, 235, 0.14);
+        border-radius: 8px;
+        box-shadow: 0 18px 48px rgba(24, 50, 74, 0.10);
+        padding: 44px;
+      }
+
+      .panel-title {
+        color: #0f766e;
+        font-size: 34px;
+        font-weight: 900;
+        margin-bottom: 20px;
+      }
+
+      .formula {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        flex-wrap: wrap;
+        font-size: 58px;
+        line-height: 1.2;
+        font-weight: 950;
+      }
+
+      .formula .box {
+        padding: 22px 30px;
+        border-radius: 8px;
+        background: #eef7ff;
+        border: 3px solid rgba(37, 99, 235, 0.22);
+        color: #2563eb;
+      }
+
+      .formula .orange {
+        background: #fff4e8;
+        border-color: rgba(249, 115, 22, 0.26);
+        color: #c2410c;
+      }
+
+      .formula .teal {
+        background: #eaf8f5;
+        border-color: rgba(15, 118, 110, 0.24);
+        color: #0f766e;
+      }
+
+      .equals {
+        color: #18324a;
+      }
+
+      .mini-track {
+        position: relative;
+        height: 360px;
+        background: linear-gradient(#ffffff, #f1f8f7);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .mini-road {
+        position: absolute;
+        left: 54px;
+        right: 54px;
+        bottom: 96px;
+        height: 8px;
+        background: #18324a;
+      }
+
+      .mini-runner {
+        position: absolute;
+        bottom: 112px;
+        width: 92px;
+        height: 54px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        color: #fff;
+        font-weight: 900;
+      }
+
+      .mini-fast {
+        left: 90px;
+        background: #c2410c;
+      }
+
+      .mini-slow {
+        left: 360px;
+        background: #0f766e;
+      }
+
+      .relative-arrow {
+        position: absolute;
+        left: 160px;
+        right: 190px;
+        top: 86px;
+        height: 8px;
+        background: #f97316;
+        transform-origin: left center;
+      }
+
+      .relative-arrow::after {
+        content: "";
+        position: absolute;
+        right: -4px;
+        top: -13px;
+        border-left: 26px solid #c2410c;
+        border-top: 17px solid transparent;
+        border-bottom: 17px solid transparent;
+      }
+
+      .relative-label {
+        position: absolute;
+        top: 28px;
+        left: 226px;
+        font-size: 34px;
+        color: #c2410c;
+        font-weight: 950;
+      }
+
+      .example-grid {
+        display: grid;
+        grid-template-columns: 0.88fr 1.12fr;
+        gap: 44px;
+        align-items: stretch;
+      }
+
+      .problem-card {
+        background: #ffffff;
+        border-left: 12px solid #f97316;
+        border-radius: 8px;
+        box-shadow: 0 18px 48px rgba(24, 50, 74, 0.10);
+        padding: 46px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 28px;
+      }
+
+      .problem-card strong {
+        color: #c2410c;
+      }
+
+      .problem-card p {
+        font-size: 38px;
+        line-height: 1.44;
+        font-weight: 760;
+      }
+
+      .steps {
+        display: grid;
+        gap: 20px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 76px 1fr;
+        align-items: center;
+        gap: 24px;
+        background: #ffffff;
+        border: 3px solid rgba(15, 118, 110, 0.13);
+        border-radius: 8px;
+        padding: 24px 30px;
+        box-shadow: 0 12px 30px rgba(24, 50, 74, 0.08);
+      }
+
+      .num {
+        width: 76px;
+        height: 76px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-size: 36px;
+        font-weight: 950;
+        color: #fff;
+        background: #0f766e;
+      }
+
+      .step-text {
+        font-size: 34px;
+        line-height: 1.32;
+        font-weight: 850;
+      }
+
+      .step-text span {
+        color: #2563eb;
+      }
+
+      .answer {
+        color: #c2410c;
+        font-size: 56px;
+        font-weight: 950;
+      }
+
+      .variant-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        width: min(1460px, 100%);
+      }
+
+      .variant {
+        background: #ffffff;
+        border-radius: 8px;
+        min-height: 310px;
+        padding: 36px;
+        box-shadow: 0 16px 44px rgba(24, 50, 74, 0.10);
+        border-top: 10px solid #2563eb;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .variant:nth-child(2) {
+        border-top-color: #f97316;
+      }
+
+      .variant:nth-child(3) {
+        border-top-color: #0f766e;
+      }
+
+      .variant h3 {
+        font-size: 40px;
+        line-height: 1.22;
+        font-weight: 950;
+      }
+
+      .variant p {
+        font-size: 30px;
+        line-height: 1.36;
+        color: #546376;
+        font-weight: 700;
+      }
+
+      .final-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 34px;
+        width: min(1400px, 100%);
+      }
+
+      .final-card {
+        background: #ffffff;
+        padding: 42px 34px;
+        border-radius: 8px;
+        box-shadow: 0 18px 48px rgba(24, 50, 74, 0.10);
+        border: 3px solid rgba(15, 118, 110, 0.16);
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .final-card .big {
+        font-size: 72px;
+        font-weight: 950;
+        color: #0f766e;
+      }
+
+      .final-card h3 {
+        font-size: 42px;
+        font-weight: 950;
+      }
+
+      .final-card p {
+        font-size: 29px;
+        line-height: 1.35;
+        color: #546376;
+        font-weight: 750;
+      }
+
+      .progress {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 12px;
+        background: rgba(24, 50, 74, 0.12);
+        z-index: 50;
+      }
+
+      .progress-fill {
+        width: 100%;
+        height: 100%;
+        transform-origin: left center;
+        transform: scaleX(0);
+        background: linear-gradient(90deg, #0f766e, #2563eb, #f97316);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="72"
+      data-width="1920"
+      data-height="1080"
+    >
+      <audio
+        id="narration"
+        data-start="0"
+        data-duration="70.1"
+        data-track-index="2"
+        src="assets/narration.wav"
+        data-volume="1"
+      ></audio>
+
+      <main id="course" class="clip" data-start="0" data-duration="72" data-track-index="1">
+        <div class="corner-label">
+          <span class="corner-dot"></span>
+          初中数学 · 行程问题
+        </div>
+
+        <section id="scene-1" class="scene">
+          <div class="scene-content center">
+            <div class="eyebrow">同向运动里的核心模型</div>
+            <h1>追及问题：快者追上慢者</h1>
+            <p class="subline">看懂“距离差怎样变小”，公式就自然出现。</p>
+            <div class="track-wrap">
+              <div class="track">
+                <div class="gap-brace">
+                  <span class="gap-text">起初相差一段路</span>
+                </div>
+                <div id="s1-slow" class="runner slow" data-layout-allow-overflow>
+                  <span class="runner-label">慢者</span>
+                  慢
+                </div>
+                <div id="s1-fast" class="runner fast" data-layout-allow-overflow>
+                  <span class="runner-label">快者</span>
+                  快
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="scene-2" class="scene">
+          <div class="scene-content">
+            <div class="split">
+              <div>
+                <div class="eyebrow">关键观察</div>
+                <h2>不是看谁跑得远，先看距离差怎样缩小</h2>
+                <p class="subline">同一段时间里，快者比慢者多走的路，就是“补上”的距离。</p>
+              </div>
+              <div class="panel">
+                <div class="panel-title">距离差的变化</div>
+                <div class="formula">
+                  <span class="box teal">慢者走</span>
+                  <span class="equals">+</span>
+                  <span class="box orange">多走部分</span>
+                  <span class="equals">=</span>
+                  <span class="box">快者走</span>
+                </div>
+              </div>
+            </div>
+            <div class="caption">追上那一刻：快者多走的路，刚好等于一开始的路程差。</div>
+          </div>
+        </section>
+
+        <section id="scene-3" class="scene">
+          <div class="scene-content">
+            <div class="split">
+              <div class="panel mini-track">
+                <div class="relative-label">速度差 = 快速 − 慢速</div>
+                <div id="relative-arrow" class="relative-arrow"></div>
+                <div class="mini-road"></div>
+                <div id="s3-fast" class="mini-runner mini-fast">快</div>
+                <div id="s3-slow" class="mini-runner mini-slow">慢</div>
+              </div>
+              <div>
+                <div class="eyebrow">核心公式</div>
+                <h2>把两个人看成“一个人在追”</h2>
+                <div class="formula" style="margin-top: 42px">
+                  <span class="box">追上时间</span>
+                  <span class="equals">=</span>
+                  <span class="box teal">路程差</span>
+                  <span class="equals">÷</span>
+                  <span class="box orange">速度差</span>
+                </div>
+              </div>
+            </div>
+            <div class="caption">只要是同向追赶，并且快者速度更大，就先找“差”：路程差、速度差。</div>
+          </div>
+        </section>
+
+        <section id="scene-4" class="scene">
+          <div class="scene-content">
+            <div class="example-grid">
+              <div class="problem-card">
+                <div class="eyebrow">例题</div>
+                <p>小明在后，小华在前，两人相距 <strong>120 米</strong>。</p>
+                <p>小明每秒跑 <strong>6 米</strong>，小华每秒跑 <strong>4 米</strong>，同时同向出发。</p>
+                <p>小明多久追上小华？</p>
+              </div>
+              <div class="steps">
+                <div class="step">
+                  <div class="num">1</div>
+                  <div class="step-text">路程差：<span>120 米</span></div>
+                </div>
+                <div class="step">
+                  <div class="num">2</div>
+                  <div class="step-text">速度差：<span>6 − 4 = 2 米/秒</span></div>
+                </div>
+                <div class="step">
+                  <div class="num">3</div>
+                  <div class="step-text">时间：<span>120 ÷ 2 = 60 秒</span></div>
+                </div>
+                <div class="step">
+                  <div class="num">✓</div>
+                  <div class="step-text answer">答：60 秒后追上。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="scene-5" class="scene">
+          <div class="scene-content center">
+            <div class="eyebrow">遇到变式，仍然先找“差”</div>
+            <h2>题目变化，核心不变</h2>
+            <div class="variant-row">
+              <article class="variant">
+                <h3>已经相距多少？</h3>
+                <p>直接作为路程差。</p>
+              </article>
+              <article class="variant">
+                <h3>慢者先走一段？</h3>
+                <p>先算出领先距离，再追。</p>
+              </article>
+              <article class="variant">
+                <h3>快者晚出发？</h3>
+                <p>先补出新的距离差。</p>
+              </article>
+            </div>
+            <div class="caption">判断题型时，问自己一句：追上前，两者相差多少？每秒能缩小多少？</div>
+          </div>
+        </section>
+
+        <section id="scene-6" class="scene">
+          <div class="scene-content center">
+            <div class="eyebrow">解题三步</div>
+            <h2>画线 · 找差 · 列式</h2>
+            <div class="final-grid">
+              <div class="final-card">
+                <div class="big">01</div>
+                <h3>画线</h3>
+                <p>标出前后位置、运动方向和起初距离。</p>
+              </div>
+              <div class="final-card">
+                <div class="big">02</div>
+                <h3>找差</h3>
+                <p>路程差是要补的距离，速度差是每秒补多少。</p>
+              </div>
+              <div class="final-card">
+                <div class="big">03</div>
+                <h3>列式</h3>
+                <p>追上时间 = 路程差 ÷ 速度差。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="progress">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+      tl.set(["#scene-2", "#scene-3", "#scene-4", "#scene-5", "#scene-6"], { opacity: 0 });
+      tl.set("#progress-fill", { scaleX: 0 });
+      tl.set("#s1-fast", { x: 0 });
+      tl.set("#s1-slow", { x: 0 });
+      tl.set("#relative-arrow", { scaleX: 0.2 });
+      tl.set(["#s3-fast", "#s3-slow"], { x: 0 });
+
+      tl.from("#scene-1 .eyebrow", { y: 34, opacity: 0, duration: 0.55 }, 0.15);
+      tl.from("#scene-1 h1", { y: 44, opacity: 0, duration: 0.7 }, 0.35);
+      tl.from("#scene-1 .subline", { y: 30, opacity: 0, duration: 0.55 }, 0.75);
+      tl.from("#scene-1 .track-wrap", { y: 50, opacity: 0, scale: 0.98, duration: 0.7 }, 1.05);
+      tl.from("#scene-1 .gap-brace", { scaleX: 0, opacity: 0, duration: 0.65 }, 1.45);
+      tl.to("#s1-slow", { x: 215, duration: 4.8, ease: "power1.inOut" }, 1.8);
+      tl.to("#s1-fast", { x: 560, duration: 4.8, ease: "power1.inOut" }, 1.8);
+      tl.to("#scene-1", { opacity: 0, y: -20, duration: 0.55, ease: "power2.in" }, 6.35);
+
+      tl.set("#scene-2", { y: 0 }, 6.75);
+      tl.to("#scene-2", { opacity: 1, duration: 0.45 }, 6.75);
+      tl.from("#scene-2 .eyebrow", { y: 32, opacity: 0, duration: 0.5 }, 7.05);
+      tl.from("#scene-2 h2", { y: 42, opacity: 0, duration: 0.65 }, 7.25);
+      tl.from("#scene-2 .subline", { y: 28, opacity: 0, duration: 0.55 }, 7.75);
+      tl.from("#scene-2 .panel", { x: 46, opacity: 0, duration: 0.65 }, 8.0);
+      tl.from("#scene-2 .formula .box", { y: 28, opacity: 0, duration: 0.45, stagger: 0.16 }, 8.65);
+      tl.from("#scene-2 .caption", { y: 28, opacity: 0, duration: 0.55 }, 10.1);
+      tl.to("#scene-2 .formula .orange", { scale: 1.06, duration: 0.35, yoyo: true, repeat: 1, ease: "power2.inOut" }, 12.2);
+      tl.to("#scene-2", { opacity: 0, y: -18, duration: 0.55, ease: "power2.in" }, 17.35);
+
+      tl.set("#scene-3", { y: 0 }, 17.75);
+      tl.to("#scene-3", { opacity: 1, duration: 0.45 }, 17.75);
+      tl.from("#scene-3 .panel", { x: -46, opacity: 0, duration: 0.65 }, 18.15);
+      tl.from("#scene-3 .eyebrow", { y: 32, opacity: 0, duration: 0.5 }, 18.2);
+      tl.from("#scene-3 h2", { y: 42, opacity: 0, duration: 0.65 }, 18.45);
+      tl.to("#relative-arrow", { scaleX: 1, duration: 1.0 }, 19.05);
+      tl.to("#s3-fast", { x: 360, duration: 4.4, ease: "power1.inOut" }, 19.35);
+      tl.to("#s3-slow", { x: 170, duration: 4.4, ease: "power1.inOut" }, 19.35);
+      tl.from("#scene-3 .formula .box", { y: 34, opacity: 0, duration: 0.5, stagger: 0.18 }, 21.1);
+      tl.from("#scene-3 .caption", { y: 28, opacity: 0, duration: 0.55 }, 23.6);
+      tl.to("#scene-3 .formula .orange", { scale: 1.06, duration: 0.35, yoyo: true, repeat: 1, ease: "power2.inOut" }, 27.0);
+      tl.to("#scene-3", { opacity: 0, y: -18, duration: 0.55, ease: "power2.in" }, 31.3);
+
+      tl.set("#scene-4", { y: 0 }, 31.75);
+      tl.to("#scene-4", { opacity: 1, duration: 0.45 }, 31.75);
+      tl.from("#scene-4 .problem-card", { x: -48, opacity: 0, duration: 0.65 }, 32.1);
+      tl.from("#scene-4 .problem-card p", { y: 24, opacity: 0, duration: 0.42, stagger: 0.5 }, 32.7);
+      tl.from("#scene-4 .step", { x: 54, opacity: 0, duration: 0.52, stagger: 1.0 }, 35.2);
+      tl.to("#scene-4 .answer", { scale: 1.06, duration: 0.35, yoyo: true, repeat: 1, ease: "power2.inOut" }, 43.0);
+      tl.to("#scene-4", { opacity: 0, y: -18, duration: 0.55, ease: "power2.in" }, 49.35);
+
+      tl.set("#scene-5", { y: 0 }, 49.75);
+      tl.to("#scene-5", { opacity: 1, duration: 0.45 }, 49.75);
+      tl.from("#scene-5 .eyebrow", { y: 32, opacity: 0, duration: 0.5 }, 50.05);
+      tl.from("#scene-5 h2", { y: 40, opacity: 0, duration: 0.6 }, 50.3);
+      tl.from("#scene-5 .variant", { y: 52, opacity: 0, duration: 0.55, stagger: 0.28 }, 51.15);
+      tl.from("#scene-5 .caption", { y: 28, opacity: 0, duration: 0.55 }, 54.1);
+      tl.to("#scene-5 .variant:nth-child(2)", { scale: 1.035, duration: 0.35, yoyo: true, repeat: 1, ease: "power2.inOut" }, 57.6);
+      tl.to("#scene-5", { opacity: 0, y: -18, duration: 0.55, ease: "power2.in" }, 61.35);
+
+      tl.set("#scene-6", { y: 0 }, 61.75);
+      tl.to("#scene-6", { opacity: 1, duration: 0.45 }, 61.75);
+      tl.from("#scene-6 .eyebrow", { y: 32, opacity: 0, duration: 0.5 }, 62.05);
+      tl.from("#scene-6 h2", { y: 42, opacity: 0, duration: 0.65 }, 62.3);
+      tl.from("#scene-6 .final-card", { y: 54, opacity: 0, duration: 0.58, stagger: 0.28 }, 63.25);
+      tl.to("#progress-fill", { scaleX: 1, duration: 72, ease: "none" }, 0);
+
+      window.__timelines["main"] = tl;
+
+      if (new URLSearchParams(window.location.search).get("autoplay") === "1") {
+        tl.play(0);
+      }
+    </script>
+  </body>
+</html>
