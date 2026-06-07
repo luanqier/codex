@@ -53,3 +53,45 @@ git log --oneline -5
 ## 2026-06-07 初始接入策略
 
 先建立本地 Git 仓库和第一版核心快照，不立即绑定远程仓库。远程仓库需要用户确认平台和仓库地址后再添加。
+
+## 2026-06-07 远程仓库接入
+
+远程仓库：
+
+```text
+https://github.com/luanqier/codex
+```
+
+当前状态：
+
+- 本地已添加远程 `origin`。
+- 本地已有提交记录。
+- 推送到 GitHub 时当前环境无法连接 `github.com:443`，需要稍后在网络可用时重试。
+
+重试推送：
+
+```text
+git push -u origin main
+```
+
+## 自动备份脚本
+
+脚本位置：
+
+```text
+06_Automations_自动化/git-auto-backup.ps1
+```
+
+作用：
+
+1. 检查本地是否有文件变化。
+2. 如果有变化，自动 `git add .` 并提交。
+3. 无论是否有新提交，都会尝试 `git push origin main`。
+
+手动运行：
+
+```text
+powershell -ExecutionPolicy Bypass -File "06_Automations_自动化/git-auto-backup.ps1"
+```
+
+注意：该脚本不自动处理 GitHub 登录、网络失败或远程冲突。遇到这些情况需要人工处理。
