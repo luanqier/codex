@@ -11,7 +11,7 @@ Resolve these parameters from the current request or project before production:
 - Source scope: chapter, scene, excerpt, or full work.
 - Target deliverable: analysis, script, storyboard, prompts, references, images, video, or full package.
 - Saved approximate chapter-length target, source-derived final duration, default 15-second segment duration, and target model limit. Treat `每章预计时长` as a soft target; treat an explicitly exact total duration as a hard override only when the user clearly requests exact timing.
-- Pacing and acceptable shot-density range.
+- Pacing, dynamic shot-count logic, and per-shot timing basis.
 - Script schema and naming convention.
 - Visual style, aspect ratio, audience, platform, and safety boundary.
 - Dialogue policy: exact preservation, light compression, or adaptation.
@@ -36,7 +36,8 @@ Do not carry these values from a different novel or prior project. If a paramete
 - Read `每章预计时长` from project settings. If it is an approximate value or range, plan toward it without sacrificing required events, safe meaningful dialogue, natural acting, transitions, or confrontation scale. State the planned runtime before drafting and document any justified deviation in the chapter production index.
 - Derive total chapter duration from retained dialogue, natural pauses, visible actions, transitions, and combat needs; never default to a fixed chapter runtime.
 - Use 15 seconds per segment by default. Change the segment duration only when the user specifies another value or the target tool makes 15 seconds unavailable; if tool availability forces a change, state the applied value.
-- Choose segment and shot counts from narrative needs and target-tool limits, not a fixed favorite structure.
+- Choose each Segment's shot count from its actual visual beats, dialogue composition changes, reactions, action phases, reveals, spatial reorientation, and transitions. Do not impose a fixed range, favorite count, or preferred grid size; target-tool limits are feasibility constraints only.
+- Estimate every shot independently from dialogue speaking time, action completion, visible performance, camera travel, information-reading time, and transition or sound decay. Never obtain shot timing by evenly dividing the Segment duration or by repeating a uniform duration template.
 - Make duration arithmetic exact when timed output is required.
 - Preserve safe source dialogue as fully as practical according to the current dialogue policy. Prefer adding justified runtime over deleting meaningful dialogue. Automatically replace prohibited wording without quoting it in the deliverable.
 - Compress exposition through visible action, reaction, props, environment, or motivated montage without inventing a new story branch.

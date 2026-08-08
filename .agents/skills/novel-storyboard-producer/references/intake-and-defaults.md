@@ -44,7 +44,7 @@ After the first source upload for a new project, inspect the title, genre, chapt
 8. 交付范围
    默认：完整章节包，包含音色档案、每段TXT、宫格图、人物参考图、生产索引和章节ZIP
 
-固定规则：内容安全红线、角色一致性、Segment文件夹结构和质检不可关闭。
+固定规则：内容安全红线、角色一致性、根据实际内容决定镜头数、逐镜计算非均匀时长、Segment文件夹结构和质检不可关闭。
 ```
 
 Accept natural-language answers. The user may modify one item, several items, or all editable items. Do not ask them to repeat unchanged defaults.
@@ -80,7 +80,8 @@ When the user gives no override, use:
 - Approximate chapter length: default to `自动适配原文，不设固定上限`. If the user specifies an approximate duration or range, treat it as a soft pacing target rather than a hard cap.
 - Total duration: calculate the final runtime from retained dialogue, natural pauses, required action, transitions, and fight-set-piece needs. Aim for the saved approximate chapter length when feasible; never delete required story information or damage natural timing merely to hit it, and record a justified deviation in the chapter production index.
 - Segment structure: dynamic segment count with a default duration of 15 seconds per segment. Let the user specify another segment duration; do not force a fixed number of segments.
-- Shot density: normally 3–6 shots per segment; allow 7 only when the source requires it.
+- Shot count: determine it separately for every Segment from actual dialogue turns, action phases, reactions, reveals, spatial changes, transitions, and target-model feasibility. Do not use a preset range or preferred grid count.
+- Shot timing: calculate each shot independently from natural speaking time, visible action completion, performance beats, camera travel, reading time, and sound or transition decay. Do not divide the Segment evenly; use deliberately non-uniform durations whose sum exactly matches the Segment duration.
 - Script schema: start each Segment TXT with its `@图N` declaration, define `本段统一风格` and `本段声音基线` once, then write every timed shot in Chinese with only `主体`, `动作`, `运镜`, `风格`, `对白/旁白`, and `声音与同步`.
 - Performance: express emotion through motivated, visible acting inside `动作`; never use an emotion label alone. Inherit stable mannerisms and write only the two to four cues that change in the shot.
 - Dialogue: preserve safe source dialogue as fully as practical at a natural speaking pace; automatically rewrite prohibited wording, compress only repetition or non-visual exposition when necessary, and preserve narrative intent without repeating unsafe language.

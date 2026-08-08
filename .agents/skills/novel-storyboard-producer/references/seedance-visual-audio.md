@@ -23,6 +23,8 @@ Then write every shot in Chinese with these exact compact fields:
 
 Keep the prompt directly generatable. Use literary language to sharpen sensory specificity, not to replace visible information with abstraction.
 
+Set the number of shots from the actual visual beats before writing the blocks. Assign the duration in each `镜号N（Xs）` independently from its dialogue, action, performance, camera, information, and sound needs. Do not create equal-duration shots by dividing the Segment total; verify that the deliberately varied durations still sum exactly to the Segment duration.
+
 ## Micro-visual detail
 
 - Put stable texture, material, light, and motion behavior in `本段统一风格`; repeat only shot-specific changes in `风格`.

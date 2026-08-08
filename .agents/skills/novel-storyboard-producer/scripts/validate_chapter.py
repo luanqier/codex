@@ -249,6 +249,11 @@ def main() -> int:
             errors.append(f"Segment {segment_no}: non-sequential shot numbers {shot_numbers}")
         if not shots:
             errors.append(f"Segment {segment_no}: no timed shots found")
+        if len(durations) >= 2 and max(durations) - min(durations) <= 0.01:
+            errors.append(
+                f"Segment {segment_no}: all {len(durations)} shots use the same duration; "
+                "calculate each shot independently from dialogue, action, performance, camera, and transition needs"
+            )
         errors.extend(validate_shot_fields(text, segment_no))
         total_seconds = sum(durations)
         if abs(total_seconds - args.seconds) > 0.01:

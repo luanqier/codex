@@ -2,7 +2,7 @@
 
 ## Panel count
 
-Use one panel per scripted shot. If a segment contains N shots, generate an N-panel grid. Never pad, merge, or duplicate panels to reach a preferred grid size.
+Use one panel per scripted shot. Determine the script's shot count from actual content before choosing a grid layout. If a Segment contains N shots, generate an N-panel grid. Never force the script toward a preferred grid count, or pad, merge, or duplicate panels to reach one.
 
 After approval, save the grid inside its segment folder as `图1_参考分镜图_N宫格.*`, using the actual Chinese grid count such as `五宫格`. The segment TXT must declare it first as `@图1是参考分镜图`.
 

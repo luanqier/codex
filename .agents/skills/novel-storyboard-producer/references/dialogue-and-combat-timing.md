@@ -14,6 +14,20 @@ Calculate the working duration from:
 4. Establishing time needed to make a new location or confrontation geography readable.
 5. A 30–45 second allowance for each story-significant large-scale confrontation.
 
+## Dynamic shot count and non-uniform shot timing
+
+Determine shot count only after identifying the Segment's actual visual beats. Start a new shot when the story needs a materially new composition, speaker emphasis, reaction, action phase, reveal, spatial orientation, scale change, or transition. Keep a beat in the same shot when camera movement and blocking can express it clearly without sacrificing readability. Do not target a preset shot-count range or design the script around a preferred storyboard grid.
+
+Calculate every shot duration independently:
+
+1. Measure dialogue at the character's natural speaking pace, including meaningful pauses and interruptions.
+2. Add the time required for the visible action to begin, develop, and reach a readable endpoint.
+3. Add only the motivated reaction, gaze, breath, posture, or object interaction needed for performance.
+4. Allow enough time for camera travel, focus change, reveal comprehension, environmental response, and sound decay.
+5. Keep inserts, cutaways, and simple reactions shorter than dialogue-heavy, multi-phase action, reveal, or long-travel shots when the content supports that difference.
+
+Do not divide the Segment duration by the number of shots. Do not assign every shot the same duration or repeat a mechanical pattern across Segments. Adjust the independently estimated values until their sum matches the Segment duration while preserving their relative timing needs. If two or more shots genuinely require the same duration, vary the surrounding shots and record a rationale when the entire Segment would otherwise become uniform.
+
 Respect an explicit user or project duration as an override. If that cap cannot contain the required events and dialogue naturally, report the conflict and propose the smallest viable runtime instead of silently deleting content.
 
 ## Dialogue retention
@@ -52,6 +66,8 @@ Before approving the script, verify:
 - The derived chapter runtime equals the sum of all segment durations.
 - Every segment is exactly 15 seconds by default or exactly matches the user's stated override.
 - Dialogue has enough speaking and reaction time.
+- Shot count is justified by actual visual beats rather than a preset range or preferred grid.
+- Shot durations were calculated per shot and are not mechanically equal or template-repeated.
 - No meaningful dialogue was removed solely to reach a preset length.
 - Every story-significant confrontation receives 30–45 seconds of large-scale cultivation-level but non-graphic spectacle unless the source explicitly requires an instant outcome.
 - At the default setting, the fight is partitioned into two or three linked 15-second segments.

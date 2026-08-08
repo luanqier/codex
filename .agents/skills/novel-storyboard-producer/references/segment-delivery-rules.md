@@ -90,6 +90,7 @@ Block delivery when any Segment:
 - uses non-consecutive `图N` numbers;
 - lacks exactly one `图1_参考分镜图_N宫格` file;
 - has a grid count that differs from the TXT shot count;
+- uses a preset shot count or gives every shot the same duration instead of calculating shot timing from actual dialogue, action, performance, camera, and transition needs;
 - lacks a matching `图N_人物名` image for any declared character;
 - contains a numbered image that is not declared in the TXT;
 - omits a distinct visible story character who needs identity consistency;

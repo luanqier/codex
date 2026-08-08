@@ -10,6 +10,8 @@ A production unit cannot ship if any applicable item fails:
 - A character acts on information they have not learned.
 - A segment cannot be causally connected to the prior state.
 - Required duration arithmetic is wrong.
+- A Segment uses a preset or preferred shot count instead of deriving its shots from the actual dialogue, action, reaction, reveal, spatial, or transition beats.
+- A Segment with two or more shots assigns the same duration to every shot, evenly divides the Segment by shot count, or repeats a mechanical timing template without independent per-shot justification.
 - A segment is not exactly 15 seconds when the user did not specify another duration, or it does not match the user's explicit segment-duration override.
 - A fixed chapter-duration template overrides the source-driven runtime without an explicit user or project requirement.
 - A saved `每章预计时长` is ignored without comparison, or the final runtime falls outside a user-provided estimate without a reason recorded in the chapter production index.
@@ -60,6 +62,7 @@ Require at least 4 in the first three categories and no blocking failure unless 
 
 - Local segments work independently but fail to form a causal sequence.
 - A fixed template overrides the number of story beats or shots actually needed.
+- Shot durations are mechanically uniform even though dialogue length, action complexity, performance, camera travel, or transition needs differ.
 - An arbitrary total runtime forces dialogue loss or compresses a confrontation below its required dramatic scale.
 - A long confrontation pads runtime with repeated exchanges, disconnected effects, or unclear action instead of escalation and reversals.
 - Literal term filtering passes while the output still conveys semantically equivalent unsafe material.
