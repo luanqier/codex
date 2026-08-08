@@ -1,0 +1,4 @@
+interface:
+  display_name: "小说连续分镜生产"
+  short_description: "把小说转成安全的中文分镜、角色表演、音色和声画同步包"
+  default_prompt: "使用 $novel-storyboard-producer。小说原文：[粘贴文本或文件路径]；画面风格：[可选]。新项目先用简短问题确认每章预计时长等可修改默认值，再按安全红线、15秒默认Segment、中文结构化镜头、角色表演、音色与声画同步规则生产。"
