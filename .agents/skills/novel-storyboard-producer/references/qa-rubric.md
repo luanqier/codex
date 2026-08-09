@@ -21,6 +21,10 @@ A production unit cannot ship if any applicable item fails:
 - Confrontation spectacle invents an unsupported cultivation stage, ability, technique, artifact, summon, formation, transformation, harmful result, winner, or consequence.
 - Storyboard panel count differs from scripted shot count.
 - A recurring character, scene, or prop uses the wrong identity or stage version.
+- A major character is visually generic, lacks distinctive identity anchors, or is made attractive by copying one interchangeable beauty template instead of source-compatible face, silhouette, costume, motif, posture, and movement traits.
+- A high-status, noble, royal, divine, sect-leader, wealthy, ceremonial, or otherwise important character is underdressed or visually low-status without a source-supported reason.
+- A major palace, sect hall, divine domain, ancestral ground, capital, ceremony, banquet, arena, or reveal setting is underscaled or visually plain without a source-supported reason.
+- Episode 1, chapter 1, Segment 1 lacks a source-compatible audience hook, or adds unsupported plot, premature information, unsafe content, or continuity conflict merely to create spectacle.
 - An ordinary scene unnecessarily changes the main character design or creates a new persistent version.
 - A temporary special-occasion design persists beyond its authorized scene, or the prior active version is not restored afterward.
 - A persistent redesign occurs without a lasting world, identity, power-stage, or life-stage transition.
