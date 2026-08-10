@@ -10,7 +10,7 @@
 请使用 skill-installer，从下面的 GitHub 子目录安装 novel-storyboard-producer：
 https://github.com/luanqier/codex/tree/main/.agents/skills/novel-storyboard-producer
 
-安装前检查目录与脚本安全；安装到个人 Skills 目录。若已有同名 Skill，先比较差异，不要直接覆盖。安装后验证 SKILL.md、agents/openai.yaml 和 scripts，并告诉我最终安装路径与验证结果。
+这是单文件 Skill，安装目录中只能保留 SKILL.md。安装前检查内容安全；若已有同名 Skill，先把旧目录压缩成带日期的 ZIP 备份，再移出 Skills 目录，然后安装最新版。不要把备份 ZIP、分享压缩包或其他说明文件放进 Skills 目录。安装后验证 SKILL.md，并告诉我最终安装路径、文件数量和验证结果；如未立即显示，请重新打开 Codex 或新建一个任务。
 ```
 
 ## 手动安装位置
@@ -20,7 +20,7 @@ https://github.com/luanqier/codex/tree/main/.agents/skills/novel-storyboard-prod
 - 已设置 `CODEX_HOME`：`$CODEX_HOME/skills/novel-storyboard-producer`
 - 未设置 `CODEX_HOME`：`~/.codex/skills/novel-storyboard-producer`
 
-不要只复制 `SKILL.md`；`agents`、`references` 和 `scripts` 都是必需组成部分。安装后如未立即显示，请重新打开 Codex 或新建一个任务。
+当前版本已经优化为单文件 Skill。只需保留完整的 `novel-storyboard-producer` 文件夹及其中的 `SKILL.md`，不要把日期备份 ZIP 解压到 Skills 目录。安装后如未立即显示，请重新打开 Codex或新建一个任务。
 
 ## 使用示例
 

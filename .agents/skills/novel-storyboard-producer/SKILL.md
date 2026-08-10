@@ -1,75 +1,103 @@
 ---
 name: novel-storyboard-producer
-description: Convert serialized novel chapters into continuity-first, safety-first AI-video production packages from as little as a novel source plus visual style, using source-driven chapter timing, 15-second default segments, compact Chinese Seedance-style prompts, embodied character performance, voice profiles, synchronized sound design, AI-generated character references, storyboard grids, per-chapter QA, packaging, and cross-chapter state tracking. Use when the user asks to turn a novel or web-novel chapter into 分镜脚本、宫格分镜图、角色图、场景图、Seedance 2.0 segments, continue producing later chapters, preserve character faces across images, direct expressions and emotions through visible acting, inspect completed chapter assets, or batch a novel into chapter folders.
+description: "Convert serialized novel chapters into continuity-first, safety-first Chinese AI-video production packages: timed Segment scripts, Seedance-style prompts, character/scene references, storyboard grids, voice and sound design, chapter packaging, and cross-chapter continuation. Use for 小说分镜、宫格图、角色图、场景图、章节续作、Seedance prompts, or complete novel-video packaging."
 ---
 
 # Novel Storyboard Producer
 
-Turn novel chapters into production-ready storyboard packages while preserving the original event chain, visual identity, and cross-segment continuity. Treat plot fidelity as the primary constraint and visual spectacle as a supporting layer.
+将小说章节转为连续、可生成、可交付的中文分镜。目标是在不牺牲安全、剧情因果和人物一致性的前提下，用最少必要上下文完成当前请求。
 
-## Load Context
+## 先路由，再工作
 
-1. Read `references/intake-and-defaults.md` and resolve the minimum input contract. Require only the novel source. Treat visual style as optional initial input and confirm it through the one-time setup card when absent.
-2. Read the requested chapter in full and enough of the previous and next chapter to identify the incoming state and outgoing hook.
-3. Locate the project production rules, progress file, continuity ledger, character bible, scene bible, and existing reference images when available.
-4. Read only the references needed for the current task:
-   - Always read `references/content-safety.md`, `references/intake-and-defaults.md`, `references/production-rules.md`, `references/dialogue-and-combat-timing.md`, `references/performance-direction.md`, `references/seedance-visual-audio.md`, and `references/qa-rubric.md`.
-   - Read `references/continuity-method.md` when splitting or continuing chapters.
-   - Read `references/character-consistency.md` when characters appear or images are generated.
-   - Read `references/image-grid-rules.md` when generating storyboard grids.
-   - Read `references/segment-delivery-rules.md` when writing clean scripts, organizing storyboard outputs, or packaging a chapter.
-   - Read `references/project-asset-layout.md` when initializing a project, creating character or scene references, naming master assets, or packaging chapters.
-5. Treat project-specific rules as overrides. Do not import characters, costumes, or story facts from another novel.
+只执行用户当前要求的模式，不自动扩展交付范围：
 
-## Resolve Inputs Without Burdening the User
+| 模式 | 触发 | 最小读取 | 默认交付 |
+|---|---|---|---|
+| 试写/比较 | 第一段、第一章试写、不同喜剧强度对比 | 目标原文、用户本轮要求 | 文本草案，不建项目、不出图、不封包 |
+| 新章脚本 | 首次制作某章或结构重做 | 项目设定、目标章原文；只有连续性相关时读上一章结尾/下一章开头 | 定时Segment脚本与生产索引 |
+| 快速续作 | “继续”、局部润色、改时长、改喜剧强度 | 项目设定、资产索引、该章生产索引、受影响Segment；必要时读对应原文段落 | 仅新增或修改部分 |
+| 视觉资产 | 人设图、场景图、宫格图、图片修复 | 相关已批准资产、目标Segment、对应原文证据 | 指定图片及索引更新 |
+| 完整交付 | 完整章节包、ZIP、最终验收 | 当前章全部已落盘成果与索引 | QA后的章节包 |
 
-- Minimum input is the novel source. Visual style may be supplied immediately or confirmed through the one-time setup card.
-- On the first upload for a new project, inspect enough source material to propose defaults, then present the concise one-time setup card from `references/intake-and-defaults.md`. Show the current default beside every option and wait for the user's answer before production unless the user explicitly says to use defaults or skip setup.
-- Let the user reply `全部默认` or change only selected item numbers. Do not require a complete form.
-- Save the confirmed choices as `项目制作设定.md` at the project root. Reuse them for later chapters without asking again.
-- If the user later says `修改项目设定`, show only the current settings and requested or relevant options, update the file, and record the chapter from which the change becomes active.
-- Infer chapter scope, approximate chapter-length target, final source-driven runtime, pacing, script schema, dialogue policy, output layout, aspect ratio, asset policy, and QA behavior from the confirmed setup and `references/intake-and-defaults.md` when unspecified.
-- Accept optional overrides naturally from the user's request; do not force the user to complete a form.
-- After initial setup, ask only when a missing choice is blocking or would materially change the result.
-- If no project exists, initialize a lightweight project state as work proceeds instead of asking the user to design the production system.
+无法确定时选择范围更小的模式。只有缺失信息会实质改变剧情、风格或交付结构时才追问。
 
-## Select the Requested Layer
+## 快速续作协议
 
-- If asked for analysis only, report the event chain, risks, and recommendations without generating assets.
-- If asked for script only, stop after script and continuity QA.
-- If asked for characters or scenes first, create and inspect references before storyboards.
-- If asked for a full chapter, complete every stage through QA and packaging.
-- If asked to continue multiple chapters, finish and validate each chapter before starting the next.
+- 同一项目已经确认的设定、人物脸、服装版本、场景布局、章节拆分和已验收Segment视为有效缓存，不重复分析或改写。
+- “继续”表示从生产索引记录的下一个未完成项开始；先检查落盘状态，不依赖聊天记忆恢复。
+- 只读取受影响文件。局部修改不得触发全章重读、全资产重检或重新封包。
+- 只有以下变化会使缓存失效：用户修改项目设定；原文版本变化；章节因果或时长结构重排；人物长期形态变化；已批准资产被替换。
+- 缓存失效时只重算受影响的下游内容，并在生产索引记录变更范围。
+- 不输出内部事件台账、计算过程或QA长报告，除非用户要求。
 
-## Produce a Chapter
+## 不可降低的底线
 
-### 1. Build the source event ledger
+- 内容安全优先于还原度和视觉冲击。
+- 不改变原文事件顺序、人物知识状态、动机、关键结果和章节钩子。
+- 不凭空新增境界、术法、胜负、关系或后果。
+- 已批准人物与场景资产必须复用；变化需有剧情依据和版本记录。
+- 每个Segment的镜头时长之和必须精确等于该段时长。
+- 完整交付前必须完成一次全章QA；局部制作只做增量QA。
 
-List every causally necessary event in source order. Mark dialogue that should be preserved, unsafe source material that requires automatic artistic substitution, incoming state from the prior chapter, and the final hook. Do not copy prohibited source wording into notes intended for delivery. Do not draft shots before this ledger is complete.
+遇到不安全内容时，保留叙事功能并改为非图形化表达：结界、闪避、缴械、衣料或装备受损、火花、尘土、光效减弱、困住、撤退、投降、救援、剪影或克制悬念。不得在成品、提示词、文件名或解释中复述敏感措辞。玄幻对抗以能量较量、阵法、空间压力、环境响应和安全收束为主，不展示可见创伤、残酷虐待、色情低俗、自我伤害、极端仪式或侮辱性内容。
 
-### 2. Plan the chapter arc
+## 项目设定
 
-Assign each segment one story task. Make every segment change at least one state: information, objective, location, relationship, threat, possession, or emotional pressure. Use conflict and effects only where the source event requires them.
+新项目只确认一次；用户说“全部默认”“跳过设置”或明确要求立即制作时直接采用默认值：
 
-When producing episode 1, chapter 1, make Segment 1 work as an audience hook without breaking the source: choose a source-supported arresting opening image, question, contrast, threat, high-status reveal, symbolic object, aftermath, or character entrance. Do not invent a new plot branch or reveal information earlier than the source permits.
+1. 画面风格：根据原文建议
+2. Segment时长：15秒；用户指定时覆盖，例如20秒
+3. 每章时长：随原文自动适配
+4. 对白：安全前提下尽可能保留
+5. 重要对抗：默认30–45秒，可跨多个Segment
+6. 画幅：16:9
+7. 人物与场景：AI设计、锁定、按版本复用
+8. 交付：完整章节包
 
-Use the confirmed `每章预计时长` as a soft pacing and scope target. When it is `自动适配原文`, derive the chapter duration entirely from the source. When the user supplies an approximate value or range, plan toward it but do not treat it as a hard cap: preserve required events, safe meaningful dialogue, natural performance, and required confrontation scale, and record the reason when the final runtime must exceed or fall outside the estimate. Use 15 seconds as the default duration of each generation segment unless the user specifies another value. Budget enough time to retain safe dialogue at a natural speaking pace and to show required reactions, pauses, actions, and transitions. When the source contains a fight, reserve a 30–45 second large-scale xuanhuan/xianxia cultivation-level high-dynamic confrontation for each story-significant fight, normally divided into two or three linked 15-second segments. Express it through non-graphic energy contests, evasion, defensive techniques, formations, spatial pressure, and environmental response without bodily harm. Follow `references/dialogue-and-combat-timing.md`.
+完整项目将设定写入 `项目制作设定.md`；后续不重复询问。固定项为安全、身份一致性、动态镜头数、非机械计时、Segment结构和最终QA。
 
-Before writing the timed script, create or update `角色音色档案.md` at the project or chapter root for every major speaking character. Define vocal age impression, pitch, resonance, texture, cadence, articulation, emotional range, and prohibited drift. Follow `references/seedance-visual-audio.md`.
+## 脚本生产
 
-### 3. Write the timed script
+1. 首次处理目标章时提取必要事件、关键对白、进入/结束状态和下一章钩子；续作直接读取生产索引。
+2. 按因果顺序拆分Segment。每段至少推进信息、目标、位置、关系、压力、持有物或情绪状态之一。
+3. 第一章开场优先选择原文支持的醒目画面、反差、悬念、身份揭示或人物登场，不提前泄露剧情。
+4. 镜头数只由新的构图、说话重点、反应、动作阶段、揭示、空间重定向或转场决定，不迎合宫格数。
+5. 各镜分别按对白朗读、反应停顿、动作完成、运镜距离、信息理解和声效余韵计时；不得平均分配或套固定模板。
+6. 关键对白尽量保留，只压缩重复表达或可直接视觉化的说明。
+7. 情绪必须写成可见表演：停顿、目光、微表情、呼吸、手部、姿态、重心、距离或物件互动，按需选择2–4项。
+8. 相邻镜头延续位置、视线、动作轴、道具、光线、天气、音色和情绪压力。
 
-Follow the user's or project's duration, segment, pacing, output-schema, and target-model settings. Default every segment to 15 seconds; accept a user-specified segment duration as the override. When no total duration is specified, do not impose a chapter cap: calculate the duration from dialogue speaking time, dramatic pauses, visible actions, transitions, and any required 30–45 second safely adapted confrontation sequence. Ask only when different choices would materially change the result.
+轻喜剧可使用节奏错位、严肃铺垫后的合理反差、群体反应、视觉回环、Q版大头、夸张鬼脸和短暂比例变形；夸张只放大已经成立的情境与性格，不让人物突然失去判断力，不破坏剧情因果，也不让Q版状态污染正式人物资产。
 
-Determine each Segment's shot count from its actual narrative and generation needs. Create one shot for each indivisible visual beat, speaker turn that needs a new composition, reaction beat, action phase, reveal, spatial reorientation, or transition. Do not target a preset minimum, maximum, favorite count, or preferred grid size; use target-model limits only as feasibility constraints. Then estimate every shot independently from natural dialogue speaking time, visible action completion, motivated performance, camera travel, information-reading time, and transition or sound decay. Do not divide the Segment duration evenly across its shots or reuse a uniform duration pattern. Keep short inserts and reactions concise, and give dialogue, complex action, reveals, and long camera moves the time they actually require. Make the non-uniform shot durations sum exactly to each Segment duration and make the Segment durations sum to the derived chapter duration.
+## 人物与视觉标准
 
-Use compact Chinese structured Seedance 2.0-style prompt blocks. Calculate and state the planned chapter runtime before segment drafting, compare it with `每章预计时长`, and record any justified deviation in the chapter production index. Define `本段统一风格` and `本段声音基线` once per Segment. Make every shot contain only six fields: `主体`, `动作`, `运镜`, `风格`, `对白/旁白`, and `声音与同步`. Merge material, lighting, atmosphere, and motion texture into `风格`; merge music, ambience, SFX, dialogue priority, and synchronization into `声音与同步`. Use a format such as:
+- 主角至少有五个稳定识别锚点，覆盖脸型、眉眼、发型轮廓、体型、主色、纹样、标志物、姿态或动作习惯，不能只靠衣服辨认。
+- 高身份人物使用更丰富但有秩序的层次、材质、饰品、纹样、色彩等级和象征细节；“华丽”必须服务身份与世界观，避免无意义堆砌。
+- 人设图默认包含面部特写和正面全身；侧面或背面存在重要发型、服装结构、武器挂载或身份信息时再加入；另展示必要道具、纹样、材质和局部细节。
+- Q版、鬼脸和夸张变形是镜头级临时表现，不作为标准脸或长期人物版本。
+- 普通状态变化保持主设计；单场景变化使用 `single-scene`；长期世界或人生阶段变化使用 `persistent-world-stage`，并保留脸和至少三个旧锚点。
+- 宫殿、宗门、神域、都城和典礼等重要场景应匹配身份规模、纵深、材质和灯光层次。
+
+## 声音
+
+完整章节在首次出现对白前建立 `角色音色档案.md`，记录年龄感、音高、共鸣、质感、语速、咬字、停连、情绪范围和禁止漂移。每段只定义一次环境、音乐、混响和对白优先级；每镜只写变化及与可见动作、切镜、揭示和动作落点同步的声音。
+
+## Segment格式
+
+每段TXT第一行：
 
 ```text
+@图1是参考分镜图，@图2是人物名，@图3是人物名
+```
+
+`图1`固定为宫格图；从`图2`起按首次出场顺序列出清晰可见且需要身份锁定的人物，并与同文件夹图片一一对应。正文不得增加镜头字段：
+
+```text
+# 第01段
 本段统一风格：
 本段声音基线：
 
-镜号1（3.0s）
+镜号1（2.5s）
 主体：
 动作：
 运镜：
@@ -78,57 +106,44 @@ Use compact Chinese structured Seedance 2.0-style prompt blocks. Calculate and s
 声音与同步：
 ```
 
-Keep descriptions precise, visible, micro-detailed, and literary without becoming vague. In `动作`, translate emotion into observable performance: reaction timing, gaze, micro-expression, breath, hands, posture, weight shift, interpersonal distance, object interaction, and recovery. Never use a bare label such as happy, sad, angry, or nervous as the performance direction. Select only the two to four cues that materially change in the shot rather than listing every possible cue. Follow `references/performance-direction.md`. Preserve safe source dialogue as fully as practical; automatically rewrite prohibited wording into safe, dignified, artistic expression while preserving narrative function. Remove or compress other dialogue only when it is repetitive, non-visual, or explicitly authorized, and never change its intent or information. Do not add unrelated production commentary inside the clean script.
+稳定信息只写在段级基线，不逐镜重复。
 
-Write every segment as a separate TXT file inside that segment's delivery folder. Make the first non-empty line a reference declaration in this exact sequence: `@图1是参考分镜图，@图2是人物名，@图3是人物名`. Reserve `图1` for the segment's approved storyboard grid, then declare every distinct visible story character from `图2` onward in first-appearance order. Omit off-screen speakers and anonymous crowd extras unless they require an individual locked reference. The declaration order and names must match the numbered image files in the same folder one-to-one. Treat this declaration as required generation input, not production commentary.
+## 图片生产
 
-### 4. Run script QA
+- 一镜一格，格数等于实际镜头数；从左到右、从上到下，边框清楚，保持项目画幅。
+- 宫格内不生成文字、镜号、字幕、标志或水印；锁定人物脸、服装版本、场景布局、光线方向和动作轴。
+- 可将2–3张互不依赖的图片作为一批生成；每批落盘到项目永久目录后立即检查并在聊天中展示，不把临时附件、缓存或base64当作交付物。
+- 每张图片首次生成后最多修复或重生成4次，即总计最多5次生成尝试。身份、安全或连续性错误属于阻断项；不影响辨认的轻微手部、纹理或衣料波动也可进入下一次修复，但不得超过上限。
+- 第4次重试后仍不合格时，停止该图重试，并在聊天中单独使用 `⚠️ [待交付确认]` 醒目标记，展示当前图片，列明永久路径、已尝试次数和未通过项；随后继续执行不依赖该图的其余任务，不停下来等待。任务结束时统一汇总所有待确认项，提供“接受当前版本 / 指定修改 / 跳过该图”三种处理方式，并请用户做整体交付确认。只有用户明确要求“现在停下来等我确认”时才暂停。
+- 图片上下文只保留永久路径、哈希、尺寸、资产ID、版本和审核结论。
 
-Run content-safety and prohibited-term checks before all other QA. Then check source-event coverage, chronology, segment-to-segment causality, safe dialogue fidelity, the saved approximate chapter-length target, justified runtime deviation, source-driven duration math, the default or user-specified Segment duration, source-justified dynamic shot count, independently calculated non-uniform shot timing, the compact six-field Chinese schema, embodied performance, voice-profile coverage, audio synchronization, crowd load, confrontation continuity, visual-status design, episode-opening hook when applicable, and AI-generation feasibility. Reject preset shot counts, mechanically equal shot durations, emotion-only labels, implausible gestures, repeated stock expressions, flat important-character design, underdressed high-status figures, underscaled major settings, unsupported episode-opening spectacle, and performance discontinuity. Confirm that any story-significant fight receives a coherent 30–45 second large-scale xuanhuan/xianxia cultivation-level high-dynamic but non-graphic sequence without padding, repeated actions, invented powers, bodily harm, or loss of required safe dialogue. Fix failures before making images.
+## 文件结构
 
-### 5. Lock visual assets
+完整项目使用：
 
-Reuse established reference images. Store every approved master character design under `总资产/人物人设图` and every approved master scene design under `总资产/场景图`. Name each master file with the character or scene name, the chapter where that exact asset version first appears, its version class when applicable, and its version number. For every new major character, extract a distinctive character lock record from the source, let the available image model create an original reference image, inspect it, and approve or repair it before generating storyboards. Keep the main character design stable across ordinary scenes. Use a temporary single-scene variant only for a source-supported special occasion, and create a persistent redesign only after a world, identity, or major life-stage transition that justifies long-term change. Create a new scene or prop reference only for a recurring major setting, plot-critical prop, or justified stage redesign. Record master reference paths, version names, first-appearance chapters, allowed scenes, and persistence rules in the project bible and `总资产/资产索引.md`. Follow `references/character-consistency.md` and `references/project-asset-layout.md`; do not ask the user to design characters unless they explicitly want control or the source is materially ambiguous.
+```text
+<小说名>_分镜项目/
+├── 项目制作设定.md
+├── 总资产/人物人设图、场景图、资产索引.md
+└── 第NNN章/
+    ├── 分镜图/第NN段/第NN段.txt、图1_参考分镜图_N宫格、图2_人物名...
+    ├── 角色音色档案.md
+    ├── 第NNN章_生产索引.md
+    └── 第NNN章_全部Segment.zip
+```
 
-Apply the visual-status rules from `references/production-rules.md`: important characters should be distinctive and appealing, high-status characters should have source-compatible ornate clothing and symbolic costume hierarchy, and major settings should feel grand or lavish when the story supports it.
+批准的资产不覆盖，更新时递增版本号。每段文件夹只放一个TXT、一个图1宫格和声明中的人物图。ZIP排除总资产、其他章节、草稿、失败图、缓存、日志和重复总脚本。
 
-### 6. Generate storyboard grids
+## 分级QA与检查点
 
-Generate one composite grid per segment when requested. The number of panels must equal the number of scripted shots. Each panel represents exactly one shot and uses the project's requested aspect ratio. Keep panel order explicit and consistent. Save the approved grid as that segment's `图1_参考分镜图_宫格数.*`. Copy the approved active-version reference for every distinct visible story character into the same folder as `图2_人物名.*`, `图3_人物名.*`, and subsequent numbers in first-appearance order.
+- 文本新增/修改：只查安全、剧情因果、知识状态、时长数学、对白节奏、六字段和受影响的前后衔接。
+- 图片新增/修改：只查安全、身份、资产版本、场景、道具、动作轴、光线和宫格对应。
+- 封包：再做一次全章检查，确认剧情完整、总时长、人物与声音连续、声明对应、文件齐全和ZIP可打开。
+- 局部修复后只复查受影响项，不做全量循环。每阶段最多首次检查加1次修复复查。
+- 每完成一个Segment或阶段转换，更新生产索引；遇到工具中断时从最后一个已落盘项目恢复。
 
-### 7. Inspect immediately
+安全违规、人物身份错误、关键剧情缺失、时长错误、必需文件缺失或ZIP损坏是阻断项。达到图片重试上限时必须按 `⚠️ [待交付确认]` 单独展示并继续其他可执行工作，在任务结束时统一请求整体交付确认；只有用户明确要求暂停时才等待。缺少必需原文/图片、无法安全推断、工具不可用或要求冲突时，保存已完成内容，只报告一次明确异常和下一步。
 
-After each image, inspect panel count, shot correspondence, face identity, costume, stage version, group differentiation, spatial continuity, and forbidden styles. Regenerate or edit failures before proceeding.
+## 交付
 
-### 8. Validate and package
-
-Organize each Segment in its own folder containing exactly one Segment TXT, that Segment's numbered storyboard grid, and all numbered character references declared by the TXT. Validate the loose chapter structure first. Then create exactly one chapter archive named `第NNN章_全部Segment.zip` containing all Segment folders, `角色音色档案.md`, and the chapter production index; validate the completed archive with `scripts/validate_chapter.py --zip`. Do not include the project's `总资产` master library in every chapter archive because the necessary character references are already copied into the Segment folders. Do not require a duplicate clean script at the ZIP root; the Segment TXT files are authoritative. Validate the master asset library separately with `scripts/validate_project_assets.py`. Do not report completion while required checks fail. Follow `references/segment-delivery-rules.md` and `references/project-asset-layout.md` exactly.
-
-### 9. Update project state
-
-Record the chapter-ending state, unresolved hooks, new assets, costume or power-stage changes, and the next chapter's required opening state. Append execution results and user corrections to the project's learning log or execution log.
-
-## Evolution Loop
-
-Do not silently rewrite the Skill after every complaint.
-
-1. Record one-off feedback as an execution-log observation.
-2. Add a repeated or high-impact failure to evaluation cases.
-3. Propose a rule change when the same failure recurs or when the user explicitly says “以后都这样”.
-4. Test the proposed change against at least one completed chapter and one new chapter.
-5. Promote the Skill version only after the outputs pass QA and the user accepts the behavior.
-
-Keep universal production rules in this Skill, novel-specific facts in the project, and model/tool-specific syntax in separate references.
-
-## Hard Priorities
-
-Resolve tradeoffs in this order:
-
-1. Content safety, public decency, and prohibited-term exclusion.
-2. Story fidelity and causal continuity after safe adaptation.
-3. Character, prop, and scene identity.
-4. Readable action, emotion, and sound-image synchronization.
-5. Effects and visual spectacle.
-6. Decorative composition.
-
-Never improve a lower-priority layer by breaking a higher-priority layer.
+单段测试只交付所需文本或图片。完整章节交付时报告完成范围、永久路径、总时长、Segment数量和任何未解决阻断项；不复述制作规则或内部推理。
