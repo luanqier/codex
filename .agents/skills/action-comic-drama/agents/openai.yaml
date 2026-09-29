@@ -1,0 +1,4 @@
+interface:
+  display_name: "带打斗的漫剧skill"
+  short_description: "将小说或剧本转为动作清晰、攻防连贯、人物一致的漫剧分镜与视频提示词"
+  default_prompt: "使用 $action-comic-drama，把我提供的小说或剧本做成带打斗的漫剧分镜，保持动作因果、人物一致性与剧情结果。"

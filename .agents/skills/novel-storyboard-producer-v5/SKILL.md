@@ -1,41 +1,33 @@
 ---
 name: novel-storyboard-producer-v5
-description: "Convert serialized novel chapters into continuity-first Chinese AI-video production packages, including timed Segments, storyboard grids, Seedance prompts, reusable assets, QA, and packaging. Use for 小说分镜、宫格图、角色图、场景图、章节续作、Seedance prompts, complete novel-video packaging, or action/fight Segments that need precise choreography without changing the story."
+description: "将小说章节转为连续中文AI漫剧生产包，普通剧情使用定时分镜与宫格，打斗切换独立动作脚本与参考图流程，支持章节续作、Seedance提示词、资产复用、QA及封包。"
 ---
 
 # Novel Storyboard Producer V5
 
-将小说章节转为连续、可生成、可交付的中文分镜；在动作或打斗 Segment 中按需调用专业动作导演，同时保持原作、生产结构与交付格式不变。
+将小说章节转为连续漫剧。文戏沿用主分镜流程，打斗使用带打斗的漫剧skill，默认无对白、无旁白，不生成宫格，也不回填文戏六字段。
 
 ## 工作入口
+按当前请求读取 [核心流程](references/core-workflow.md)。核心流程仅决定文戏生产、项目状态与全章路由；其对白、六字段、宫格和图1声明要求不适用于打斗。
+只执行用户要求的模式。试写或脚本-only请求不自动扩展为出图、三套方案或完整封包。
 
-每次使用本 Skill，先完整读取 [references/core-workflow.md](references/core-workflow.md)。它原样保留 V4 的小说→Segment→宫格图→Seedance→资产→QA→封包流程，是所有任务的基础规则。
+## 打斗切换
+出现实际攻防、追击、压制或逃脱时，读取 [打斗适配层](references/fight-adapter.md)，再使用同级 [带打斗的漫剧skill](../action-comic-drama/SKILL.md) 与其 [打斗专用流程](../action-comic-drama/references/combat-workflow.md)。
+普通对白、建立场景、没有攻防的走动和转场继续文戏。混合段在边界拆开；切换仅加载规则，不自动创建子智能体。
+输入：原文范围、段ID/时长、风格画幅、资产路径/版本、双方目标、站位、武器持有手、能力限制、环境状态、既定结果和下一文戏入口。
+输出：专用脚本、独立人物/场景/必要道具参考图，以及放进生产索引的结束状态和接续点。收到状态后恢复文戏。
 
-只执行核心流程当前路由到的模式，不因 V5 的动作能力扩大交付范围。
+## 不可变剧情与可调生产结构
+保留事件顺序、动机、人物知识、能力、胜负、关键结果和身份资产，不新增援军、武器或代价。
+打斗默认去掉对白和旁白；必要信息移至前后文戏，无法移出的极短台词只在停顿保留。不得为了去对白删掉因果信息。
+初次制作时按动作与对白需要拆段和规划时长，不平均计时；已经批准的时长/结构不能因调用模块擅自改变。确有调整需要时记录受影响范围，用户要求固定时长则遵守该要求。
+打斗输出结构由打斗专用流程决定，明确覆盖旧版“只能回填六字段”的合同。
 
-## 动作 Segment 路由
+## 专业动作参考
+按需读取 [动作导演](vendor/fight-prompt-director/SKILL.md) 与其动作设计、摄影、诊断参考，只用于动作因果与摄影优化。vendored文件保持原样。
+项目入口默认单套标准速度，不额外追问速度或自动输出三套强度；用户请求比较时再提供不同方案。平台语法由用户指定或按目标适配，本地时间线为默认交付格式。
 
-当目标 Segment 含有打斗、追逐、对抗、演武、人兽交锋、武器/法术攻防，或其可读性依赖明确的闪避、格挡、落空、受力、位移与动作镜头时：
-
-1. 读取 [references/fight-adapter.md](references/fight-adapter.md)。
-2. 按适配层指引读取 [vendor/fight-prompt-director/SKILL.md](vendor/fight-prompt-director/SKILL.md)。
-3. 只有需要具体动作骨架、摄影规则或失败修正时，才分别读取 vendored 模块的 `references/fight-design.md`、`references/camera-guide.md` 或 `references/diagnostics.md`。
-
-普通对白、情绪、说明、静态建立、无攻防关系的移动或转场 Segment 不读取打斗模块。
-
-## 不可变合同
-
-动作模块只能细化：动作设计、攻防因果、站位、距离、接触/格挡/落空、受力、位移、武器/能量连续性、动作摄影，以及有画面来源的动作声音。
-
-动作模块不得改变：
-
-- 原小说的事件、因果、动机、知识状态、胜负、关键结果或章节钩子；
-- 原对白、人物关系、人物能力、境界、术法、武器或资源上限；
-- Segment 数量、每个 Segment 的时长或既定章节总时长；
-- 核心流程规定的段级信息、声明行与每镜六字段格式。
-
-不得把 vendored 模块的独立输出模板、默认三方案、默认时长、速度追问或模型格式带入成品。所有动作细化必须回填到 V4 的 `主体 / 动作 / 运镜 / 风格 / 对白/旁白 / 声音与同步` 六字段，且每镜时长之和仍精确等于 Segment 时长。
-
-## 冲突优先级
-
-发生冲突时依次遵循：用户明确要求与原小说证据 → 核心 V4 流程与已批准项目资产/索引 → [fight-adapter.md](references/fight-adapter.md) → vendored 打斗模块。无法在不可变合同内解决时，保留原内容并按核心流程报告阻断项，不擅自改剧情或结构。
+## QA与交付
+文戏检查六字段/宫格；打斗检查独立时间线、动作闭环、资产绑定与结束状态，不要求宫格、图1或逐镜配图。
+混合章索引保持全章顺序与总时长；ZIP包含文戏与打斗两类目录。仅支持文戏的旧校验器不能代表打斗或混合章通过，也不能为通过校验补造宫格。
+冲突优先级：用户要求与原文证据 → 本入口及打斗适配/专用流程 → 核心流程适用的文戏规则 → 专业动作参考。
