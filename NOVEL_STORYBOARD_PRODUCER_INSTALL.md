@@ -31,3 +31,15 @@ https://github.com/luanqier/codex/tree/main/.agents/skills/novel-storyboard-prod
 ## 更新方式
 
 将 GitHub 子目录的最新版重新交给 Codex，并要求先比较本地同名 Skill；确认后再更新，避免覆盖个人定制规则。
+
+## V6：连续打斗与对白升级（2026-10-01）
+
+V6独立保留V5的文戏、资产、续作、QA和章节封包，打斗强化动作余势衔接、速度对比、位移支撑、受力反馈与动作摄影。参战角色可以讲话，第三方解说、旁白和内心独白不出声。
+
+将这段话交给Codex安装：
+
+```text
+请使用skill-installer，从 https://github.com/luanqier/codex/tree/main/.agents/skills/novel-storyboard-producer-v6 安装 novel-storyboard-producer-v6。必须安装完整目录，保留references和vendor及其LICENSE，不要按旧版单文件说明只保留SKILL.md。V6的打斗模块在目录内，不依赖V5或action-comic-drama。保留已有V5；有同名V6时先比较并保留个人修改，再升级。安装后验证入口和引用，报告永久安装位置。
+```
+
+调用：`使用 $novel-storyboard-producer-v6`。已有项目从生产索引继续，批准资产、已完成段落和时长不因升级重做。V5继续保留；旧版单文件安装说明不适用于V6。
