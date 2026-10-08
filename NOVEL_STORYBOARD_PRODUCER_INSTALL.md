@@ -43,3 +43,11 @@ V6独立保留V5的文戏、资产、续作、QA和章节封包，打斗强化�
 ```
 
 调用：`使用 $novel-storyboard-producer-v6`。已有项目从生产索引继续，批准资产、已完成段落和时长不因升级重做。V5继续保留；旧版单文件安装说明不适用于V6。
+
+## V7：动作设计主干升级（2026-10-08）
+
+V7保留V6小说生产流程，打斗采用人物打法、武器机制、连招、防守状态、局势递进、空间战术和动作摄影。参战角色可以讲话，第三方解说、旁白和内心独白不出声。
+
+完整安装 https://github.com/luanqier/codex/tree/main/.agents/skills/novel-storyboard-producer-v7 ，保留references、vendor和LICENSE，不按旧版单文件说明安装。保留已有V5和V6；同名V7升级前比较并保留个人修改。
+
+调用：`使用 $novel-storyboard-producer-v7`。已有项目从索引接续。V7不依赖同级动作Skill。
